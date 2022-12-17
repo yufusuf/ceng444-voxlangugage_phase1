@@ -6,19 +6,10 @@ class Lexer(sly.Lexer):
                EQ, LT, LE, GT, GE, NE, AND,
                FALSE, TRUE, FUN, FOR, OR,
                RETURN, VAR, STRING, NOT}
-    #LE := <=
-    #EQ := ==
-    #LT := <
-    #GT := >
-    #GE := >=
-    #NE := !=
-    #tabs and spaces etc
-    ignore = r' \s' 
+
+    ignore = ' \t' 
     ignore_comment = r'//.*'
-    #Sanitize your tokens for the literals in the language (not token literals)!
-    #each token t for NUMBER should have type(t.value) == float
-    #each token t for STRING should have type(t.value) == str (remove the quotes!)
-    #each token t for TRUE/FALSE should have type(t.value) == bool
+
     ID = r'[a-zA-Z]\w*'
     ID['if'] = IF 
     ID['else'] = ELSE
@@ -30,6 +21,8 @@ class Lexer(sly.Lexer):
     ID['return'] = RETURN
     ID['var'] = VAR
     ID['print'] = PRINT
+    ID['false'] = FALSE
+    ID['true'] = TRUE
 
     PLUS = r'\+'
     MINUS = r'-'
@@ -58,11 +51,12 @@ class Lexer(sly.Lexer):
 
     @_(r'true')
     def TRUE(self, t):
-        t.value = bool(t.value)
+        t.value = True
         return t
+    
     @_(r'false')
     def FALSE(self, t):
-        t.value = bool(t.value)
+        t.value = False
         return t
 
     @_(r'"[^"]*"') 

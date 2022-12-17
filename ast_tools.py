@@ -25,7 +25,7 @@ class AExpr(Expr):
 @dataclass(frozen=True)
 class SLiteral(Expr):
     '''string literal. the grammar makes them unusable in arithmetic/logical ops when they are expressed as naked string literals.'''
-    value: str 
+    value: str
 
 @dataclass(frozen=True)
 class Stmt(ASTNode):
@@ -211,7 +211,6 @@ class ASTNodeVisitor(ABC):
 
     def visit(self, ast_node: ASTNode):
         return self.ASTNodes[type(ast_node)](ast_node)
-
     @abstractmethod
     def visit_SLiteral(self, sliteral: SLiteral):
         pass
@@ -317,11 +316,11 @@ class PrintVisitor(ASTNodeVisitor):
 
     def visit_Program(self, program: Program):
         return '\n'.join(["TOP_LVL VAR_DECLS:",
-                '\n'.join([self.visit(elem) for elem in program.var_decls]),
-                "TOP_LVL FUN_DECLS:",
-                '\n'.join([self.visit(elem) for elem in program.fun_decls]),
-                "TOP_LVL STMTS:",
-                '\n'.join([self.visit(elem) for elem in program.statements])])
+                          '\n'.join([self.visit(elem) for elem in program.var_decls]),
+                          "TOP_LVL FUN_DECLS:",
+                          '\n'.join([self.visit(elem) for elem in program.fun_decls]),
+                          "TOP_LVL STMTS:",
+                          '\n'.join([self.visit(elem) for elem in program.statements])])
 
     def visit_ErrorStmt(self, errorstmt: ErrorStmt):
         return 'ERROR_STMT;'
@@ -357,11 +356,11 @@ class PrintVisitor(ASTNodeVisitor):
 
     def visit_Block(self, block: Block):
         return '\n'.join(['{',
-                '  VAR_DECLS:',
-                '\n'.join(["    "+self.visit(elem) for elem in block.var_decls]),
-                '  STMTS:',
-                '\n'.join([self.indent(self.visit(elem)) for elem in block.statements]),
-                '}'])
+                          '  VAR_DECLS:',
+                          '\n'.join(["    "+self.visit(elem) for elem in block.var_decls]),
+                          '  STMTS:',
+                          '\n'.join([self.indent(self.visit(elem)) for elem in block.statements]),
+                          '}'])
 
     def visit_Print(self, printt: Print):
         return f"print {self.visit(printt.expr)};"
