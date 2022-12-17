@@ -1,0 +1,54 @@
+program     -> varDecl* funDecl* free-statement* EOF
+varDecl     -> "var" ID ( "=" init )? ";" // DONE
+funDecl     -> "fun" function // DONE
+
+free-statement
+            -> simpleStmt ";"
+             | compoundStmt // DONE
+
+init        -> expr
+             | "[" expr ("," expr)* "]" // DONE
+
+simpleStmt  -> asgnStmt
+             | printStmnt
+             | returnStmt // DONE
+
+compoundStmt -> ifStmt | whileStmt | forStmt // DONE
+
+statement   -> free-statement
+             | block // DONE
+
+asgnStmt    -> ID ( "[" aexpr "]" )? "=" expr // DONE
+printStmt   -> "print" expr // DONE 
+returnStmt  -> "return" expr // DONE
+
+ifStmt      -> "if" lexpr statement ("else" statement )? // DONE
+whileStmt   -> "while" lexpr  statement // DONE
+forStmt     -> "for" "(" asgnStmt? ";" lexpr? ";" asgnStmt? ")" statement // DONE
+
+block       -> "{" varDecl* statement* "}" // DONE
+
+expr        -> lexpr
+             | aexpr
+             | sexpr // DONE
+
+lexpr       -> lexpr "or" lterm | lterm
+lterm       -> lterm "and" lfact | lfact
+lfact       -> cexpr | "#" call | "(" lexpr ")" | "#" ID ( "[" aexpr "]" )?
+             | "!" lfact
+             | "true"
+             | "false" // DONE
+
+aexpr       -> aexpr  ("-"|"+") term  | term
+term        -> term  ("/"|"*") fact  | fact
+fact        -> "-" fact | call | NUMBER | "(" aexpr ")" 
+                | ID ( "[" aexpr "]" )?
+
+cexpr       -> aexpr ("!=" | "==" | ">" | ">=" | "<" | "<=") aexpr
+
+sexpr       -> STRING // DONE
+
+arguments   -> expr ( "," expr )* // DONE
+function    -> ID "(" parameters? ")" block // DONE
+parameters  -> ID ( "," ID )* // DONE
+call        -> ID "(" arguments? ")" // DONE
